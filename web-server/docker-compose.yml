@@ -15,11 +15,13 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d/
       - ./nginx/log:/var/log/nginx/
     depends_on:
-      - coffeecodetech
+      - appexamplewithphp
+      - appexamplewithnode
     networks:
       webserver:
         aliases:
-          - coffeecodetech.test
+          - app-example-with-php.test
+          - app-example-with-node.test
 
   mysql8:
     build: ./mysql/8
