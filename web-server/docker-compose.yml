@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+
+  nginx:
+    build: ./nginx
+    image: nginx
+    container_name: nginx
+    restart: always
+    tty: true
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+      - ./nginx/log:/var/log/nginx/
+    depends_on:
+      - coffeecodetech
+    networks:
+      webserver:
+        aliases:
+          - coffeecodetech.test
+
+  mysql8:
+    build: ./mysql/8
+    image: mysql8
+    container_name: mysql8
+    restart: always
+    tty: true
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/8/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    networks:
+      - webserver
+
+  appexamplewithphp:
+    build: ./html/app-example-with-php
+    image: appexamplewithphp
+    container_name: appexamplewithphp
+    restart: always
+    tty: true
+    volumes:
+      - ./html/app-example-with-php:/var/www/html/app-example-with-php
+    depends_on:
+      - mysql8
+    networks:
+      - webserver
+
+  appexamplewithnode:
+    build: ./html/app-example-with-node
+    image: appexamplewithnode
+    container_name: appexamplewithnode
+    restart: always
+    tty: true
+    volumes:
+      - ./html/app-example-with-node:/var/www/html/app-example-with-node
+    depends_on:
+      - mysql8
+    networks:
+      - webserver
+
+networks:
+  webserver:
+    driver: bridge
