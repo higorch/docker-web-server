@@ -66,4 +66,5 @@ services:
 
 networks:
   webserver:
+    name: webserver
     driver: bridge
